@@ -106,5 +106,35 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.MyViewHolder> 
         }
 
     }
+        @Override
+    public Filter getFilter() {
+        return myViewHolder;
+    }
+    private Filter myViewHolder = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            todoListFull = new ArrayList<>(todoList);
+            ArrayList<Todo> filteredList = new ArrayList<Todo>();
+            if (charSequence == null || charSequence.length() == 0){
+                filteredList.addAll(todoListFull);
+            } else{
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for (Todo item:todoListFull){
+                    if (item.getTask().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            todoList.clear();
+            todoList.addAll((ArrayList) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
 }
