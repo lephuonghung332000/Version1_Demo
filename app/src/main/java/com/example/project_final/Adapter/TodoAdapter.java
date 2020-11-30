@@ -70,6 +70,23 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.MyViewHolder> 
             }
         });
     }
+     public void deleteItem(int position) {
+        Todo item = todoList.get(position);
+        db.deleteTask(item.getId());
+        todoList.remove(position);
+        notifyItemRemoved(position);
+    }
+    // truyền  dữ liệu fragment update
+    public void editItem(int position){
+        Bundle bundle=new Bundle();
+        bundle.putInt("id",todoList.get(position).getId());
+        bundle.putString("task",todoList.get(position).getTask());
+        bundle.putString("dead",todoList.get(position).getDeadline());
+        AddNewTask fragment = new AddNewTask();
+        fragment.setArguments(bundle);
+        fragment.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddNewTask.TAG);
+    }
+
     public void setTasks(ArrayList<Todo> todoList) {
         this.todoList = todoList;
         notifyDataSetChanged();
@@ -89,34 +106,5 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.MyViewHolder> 
         }
 
     }
-    @Override
-    public Filter getFilter() {
-        return myViewHolder;
-    }
-    private Filter myViewHolder = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            todoListFull = new ArrayList<>(todoList);
-            ArrayList<Todo> filteredList = new ArrayList<Todo>();
-            if (charSequence == null || charSequence.length() == 0){
-                filteredList.addAll(todoListFull);
-            } else{
-                String filterPattern = charSequence.toString().toLowerCase().trim();
-                for (Todo item:todoListFull){
-                    if (item.getTask().toLowerCase().contains(filterPattern)){
-                        filteredList.add(item);
-                    }
-                }
-            }
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            todoList.clear();
-            todoList.addAll((ArrayList) filterResults.values);
-            notifyDataSetChanged();
-        }
-    };
+
 }
