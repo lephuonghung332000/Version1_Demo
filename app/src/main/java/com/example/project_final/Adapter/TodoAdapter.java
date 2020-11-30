@@ -41,23 +41,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.MyViewHolder> 
     public int getItemCount() {
         return todoList.size();
     }
-    public void deleteItem(int position) {
-        Todo item = todoList.get(position);
-        db.deleteTask(item.getId());
-        todoList.remove(position);
-        notifyItemRemoved(position);
-    }
-    // truyền  dữ liệu fragment update
-    public void editItem(int position){
-        Bundle bundle=new Bundle();
-        bundle.putInt("id",todoList.get(position).getId());
-        bundle.putString("task",todoList.get(position).getTask());
-        bundle.putString("dead",todoList.get(position).getDeadline());
-        AddNewTask fragment = new AddNewTask();
-        fragment.setArguments(bundle);
-        fragment.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddNewTask.TAG);
-    }
-
+   
     @NonNull
     @Override
     public TodoAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
